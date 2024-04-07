@@ -38,17 +38,22 @@ app.get('/',(req,res)=>{
 })
 
 
-//Making a new campground
-app.get("/makecampground", async (req, res) => {
-    try {
-        const camp = new Campground({ title: 'Clayton', description: "Monash University" , price:15,location:"Australia"});
-        await camp.save();
-        res.send(camp);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("An error occurred while creating the campground.");
-    }
-});
+//Making a new campground to test out the code 
+//  app.get("/makecampground", async (req, res) => {
+//     try {
+//         const camp = new Campground({ title: 'Clayton', description: "Monash University" , price:15,location:"Australia"});
+//         await camp.save();
+//         res.send(camp);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("An error occurred while creating the campground.");
+//     }
+//  });
+
+app.get('/campgrounds',async (req,res) =>{
+    const campgrounds = await Campground.find({})
+    res.render('campgrounds/index',{campgrounds})
+})
 
 //creating a server on port 3000
 app.listen(3000,() =>{
