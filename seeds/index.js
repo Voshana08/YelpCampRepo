@@ -1,3 +1,6 @@
+//********************* 
+//This file is used to seed the data from cities.js and seedHelper.js
+// ********************
 const express = require ('express')
 const cities = require('./cities')
 //destructuring the seedhelpers two arrays
