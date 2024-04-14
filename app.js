@@ -4,6 +4,8 @@ const app = express()
 const path = require('path')
 //Requiring the method-override package
 const methodOverride = require('method-override')
+//Requiring ejs-mate
+const ejsMate = require('ejs-mate')
 //Connecting to mongoose
 //Copied from the mongoose docs
 const mongoose = require('mongoose')
@@ -33,7 +35,8 @@ const campground = require('./models/campground')
 app.set('view engine', 'ejs')
 //From any directory we can render because of this line of code
 app.set('/views',path.join(__dirname,'views'))
-
+//This is another package 
+app.engine('ejs',ejsMate)
 //Parsing the body
 app.use(express.urlencoded({extended:true}))
 //method-overdide package
