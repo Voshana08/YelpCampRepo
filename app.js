@@ -26,7 +26,7 @@ db.once('open',() =>{
 const Campground = require('./models/campground');
 const { url } = require('inspector');
 const { AsyncLocalStorage } = require('async_hooks')
-const campground = require('./models/campground')
+// const campground = require('./models/campground')
 
 
 ////These two lines of code are needed in order to run the ejs 
@@ -72,10 +72,14 @@ app.get('/campgrounds/new',(req,res)=>{
 
 //We need a post request to send the form data through
 //If we need to submit a form we need to use a post route 
-app.post('/campgrounds',async(req,res) =>{
+app.post('/campgrounds',async(req,res,next) =>{
+    try{
    const campground = new Campground(req.body.campground)
     await campground.save()
     res.redirect(`/campgrounds/${campground._id}`)
+    } catch(e){
+        next(e)
+    }
 })
 
 //Displaying individual campgrounds on the /campground/show page
@@ -107,6 +111,10 @@ app.delete('/campgrounds/:id', async (req, res) => {
     await Campground.findByIdAndDelete(id);
     res.redirect('/campgrounds');
 });
+//Error handling basics
+app.use((err,req,res,next)=>{
+    res.send("Something went wrong")
+})
 
 //creating a server on port 3000
 app.listen(3000,() =>{
