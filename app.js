@@ -29,6 +29,8 @@ db.once('open',() =>{
 
 //Importing the campground model from the campround.js file
 const Campground = require('./models/campground');
+//Importing the review model
+const Review = require('./models/review.js')
 const { url } = require('inspector');
 const { AsyncLocalStorage } = require('async_hooks')
 const { error } = require('console')
@@ -129,9 +131,21 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     await Campground.findByIdAndDelete(id);
     res.redirect('/campgrounds');
 }));
+app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+    //Searching in the campground model
+    const campground = await Campground.findById(req.params.id); // Corrected method name
+    const review = new Review(req.body.review); // Corrected property access
+    campground.reviews.push(review);
+    await campground.save();
+    await review.save();
+    res.redirect(`/campgrounds/${campground._id}`);
+}));
+
+
 app.all("*",(req,res,next)=>{
     next(new expressError("Page not found",404))
 })
+
 
 //Error handling basics
 //When the catchAsync function has an error it will come here 
