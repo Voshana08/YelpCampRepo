@@ -18,7 +18,11 @@ const ejsMate = require('ejs-mate')
 //Async error handling function is being imported
 const catchAsync = require('./utils/catchAsync')
 const expressError = require('./utils/expressError')
-
+//Requiring the routes from the campgrounds.js file 
+//This is because we needed to clean up the app.js
+// Therefore we have moved most of the routes to a seperate file
+//This is how it must be done in a production environment
+const campgrounds = require('./routes/campgrounds.js')
 //Connecting to mongoose
 //Copied from the mongoose docs
 const mongoose = require('mongoose')
@@ -57,18 +61,15 @@ app.engine('ejs',ejsMate)
 app.use(express.urlencoded({extended:true}))
 //method-overdide package
 app.use(methodOverride('_method'))
-//Using joi for server side validation of the campground 
-const validateCampground = (req,res,next) =>{
-  const {error} = campgroundSchema.validate(req.body)
-  if(error){
-    const msg = error.details.map(el => el.message).join(',')
-    throw new expressError(msg,400)
-  }
-  //console.log(result)
-  else{
-    next()
-  }
-}
+
+
+app.use('/campgrounds',campgrounds)
+//Bellow is all of our routes 
+//We use express for this
+//Rendering the home page
+app.get('/',(req,res)=>{
+    res.render('home')
+})
 //Using Joi for server side side validation when a customer leaves a review of a campground 
 const validatereview = (req,res,next) => {
     const {error} = reviewschema.validate(req.body)
@@ -81,78 +82,7 @@ const validatereview = (req,res,next) => {
         next()
       }
 }
-//Bellow is all of our routes 
-//We use express for this
-//Rendering the home page
-app.get('/',(req,res)=>{
-    res.render('home')
-})
 
-
-//Making a new campground to test out the code 
-//  app.get("/makecampground", async (req, res) => {
-//     try {
-//         const camp = new Campground({ title: 'Clayton', description: "Monash University" , price:15,location:"Australia"});
-//         await camp.save();
-//         res.send(camp);
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send("An error occurred while creating the campground.");
-//     }
-//  });
-
-//Diplaying all of the campgrounds on the /campground/index page
-app.get('/campgrounds',async (req,res) =>{
-    const campgrounds = await Campground.find({})
-    res.render('campgrounds/index',{campgrounds})
-})
-
-//Creating a form 
-app.get('/campgrounds/new',(req,res)=>{
-    res.render('campgrounds/new')
-})
-
-//We need a post request to send the form data through
-//If we need to submit a form we need to use a post route 
-//Using the catchAsync function to catch async errors
-app.post('/campgrounds',validateCampground,catchAsync(async(req,res,next) =>{
-    // if(!req.body.campground) throw new expressError("Invalid campground")
-   const campground = new Campground(req.body.campground)
-    await campground.save()
-    res.redirect(`/campgrounds/${campground._id}`)
-    
-}))
-
-//Displaying individual campgrounds on the /campground/show page
-app.get('/campgrounds/:id',catchAsync(async(req,res)=>{
-    const campground = await Campground.findById(req.params.id).populate('reviews')
-   // console.log(campground)
-  res.render('campgrounds/show',{campground})
-}))
-
-//Editing already inserted content 
-//We are going to be using a form for this 
-app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
-    res.render('campgrounds/edit', { campground });
-}))
-
-app.put('/campgrounds/:id',validateCampground,catchAsync(async(req,res)=>{
-    //getting the information from the request 
-    const {id} = req.params
-    //Finding the value with that id and then updating it 
-    //We have used spread here 
-    const campground = await Campground.findByIdAndUpdate(id,{...req.body.campground})
-    //Redirecting back to the show page
-    res.redirect(`/campgrounds/${campground._id}`)}))
-
-//Deleting a Campground
-app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    
-    await Campground.findByIdAndDelete(id);
-    res.redirect('/campgrounds');
-}));
 app.post('/campgrounds/:id/reviews', validatereview,catchAsync(async (req, res) => {
     //Searching in the campground model
     const campground = await Campground.findById(req.params.id); // Corrected method name
