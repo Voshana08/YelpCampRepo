@@ -13,6 +13,14 @@ module.exports.campgroundSchema = joi.object({
     }).required()
 })
 
+module.exports.reviewschema= joi.object({
+    review: joi.object({
+        rating:joi.number().required(),
+        body:joi.string().required()
+    }).required()   
+})
+
+
 //This is how joi works. A simple example by GPT
 /*const Joi = require('joi');
 

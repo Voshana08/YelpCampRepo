@@ -1,6 +1,14 @@
 const express = require ('express')
 const app = express()
+//Using Joi for server side validation 
+//We are requiring the campgroundSchema from the schmas.js file
+//This is not the same as the mongo schema, dont be confused 
 const {campgroundSchema} = require('./schmas.js')
+//Requiring the review schema from the schmas.js file for validation
+const {reviewschema} = require('./schmas.js')
+
+
+
 //This is needed to render pages from any directory path
 const path = require('path')
 //Requiring the method-override package
@@ -49,7 +57,7 @@ app.engine('ejs',ejsMate)
 app.use(express.urlencoded({extended:true}))
 //method-overdide package
 app.use(methodOverride('_method'))
-//Using joi
+//Using joi for server side validation of the campground 
 const validateCampground = (req,res,next) =>{
   const {error} = campgroundSchema.validate(req.body)
   if(error){
@@ -61,7 +69,20 @@ const validateCampground = (req,res,next) =>{
     next()
   }
 }
-
+//Using Joi for server side side validation when a customer leaves a review of a campground 
+const validatereview = (req,res,next) => {
+    const {error} = reviewschema.validate(req.body)
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new expressError(msg,400)
+      }
+      //console.log(result)
+      else{
+        next()
+      }
+}
+//Bellow is all of our routes 
+//We use express for this
 //Rendering the home page
 app.get('/',(req,res)=>{
     res.render('home')
@@ -104,7 +125,8 @@ app.post('/campgrounds',validateCampground,catchAsync(async(req,res,next) =>{
 
 //Displaying individual campgrounds on the /campground/show page
 app.get('/campgrounds/:id',catchAsync(async(req,res)=>{
-    const campground = await Campground.findById(req.params.id)
+    const campground = await Campground.findById(req.params.id).populate('reviews')
+   // console.log(campground)
   res.render('campgrounds/show',{campground})
 }))
 
@@ -116,7 +138,7 @@ app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
 }))
 
 app.put('/campgrounds/:id',validateCampground,catchAsync(async(req,res)=>{
-    //getting the infor from the request 
+    //getting the information from the request 
     const {id} = req.params
     //Finding the value with that id and then updating it 
     //We have used spread here 
@@ -131,7 +153,7 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     await Campground.findByIdAndDelete(id);
     res.redirect('/campgrounds');
 }));
-app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+app.post('/campgrounds/:id/reviews', validatereview,catchAsync(async (req, res) => {
     //Searching in the campground model
     const campground = await Campground.findById(req.params.id); // Corrected method name
     const review = new Review(req.body.review); // Corrected property access
@@ -139,6 +161,18 @@ app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
     await campground.save();
     await review.save();
     res.redirect(`/campgrounds/${campground._id}`);
+}));
+//Deleting a review
+app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+
+    // Remove the reviewId from the reviews array of the campground
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+
+    // Delete the review
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/campgrounds/${id}`);
 }));
 
 
