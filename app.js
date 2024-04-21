@@ -5,6 +5,10 @@ const app = express()
 const path = require('path')
 //Requiring the method-override package
 const methodOverride = require('method-override')
+
+//The express.static() middleware in Express.js is used 
+//to serve static files such as HTML, CSS, images, and JavaScript files from a directory. 
+app.use(express.static(path.join(__dirname,'public')))
 //Requiring ejs-mate
 const ejsMate = require('ejs-mate')
 //Async error handling function is being imported
