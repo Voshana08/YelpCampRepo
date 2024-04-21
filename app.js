@@ -1,13 +1,5 @@
 const express = require ('express')
 const app = express()
-//Using Joi for server side validation 
-//We are requiring the campgroundSchema from the schmas.js file
-//This is not the same as the mongo schema, dont be confused 
-const {campgroundSchema} = require('./schmas.js')
-//Requiring the review schema from the schmas.js file for validation
-const {reviewschema} = require('./schmas.js')
-
-
 
 //This is needed to render pages from any directory path
 const path = require('path')
@@ -18,11 +10,12 @@ const ejsMate = require('ejs-mate')
 //Async error handling function is being imported
 const catchAsync = require('./utils/catchAsync')
 const expressError = require('./utils/expressError')
-//Requiring the routes from the campgrounds.js file 
+//Requiring the routes from the campgrounds.js and the reviews.js file
 //This is because we needed to clean up the app.js
 // Therefore we have moved most of the routes to a seperate file
 //This is how it must be done in a production environment
 const campgrounds = require('./routes/campgrounds.js')
+const reviews = require ('./routes/reviews.js')
 //Connecting to mongoose
 //Copied from the mongoose docs
 const mongoose = require('mongoose')
@@ -39,15 +32,9 @@ db.once('open',() =>{
     console.log("Database connected")
 })
 
-//Importing the campground model from the campround.js file
-const Campground = require('./models/campground');
-//Importing the review model
-const Review = require('./models/review.js')
 const { url } = require('inspector');
 const { AsyncLocalStorage } = require('async_hooks')
 const { error } = require('console')
-// const campground = require('./models/campground')
-
 
 ////These two lines of code are needed in order to run the ejs 
 //We need to specify the engine 
@@ -64,53 +51,17 @@ app.use(methodOverride('_method'))
 
 
 app.use('/campgrounds',campgrounds)
+app.use('/campgrounds/:id/reviews',reviews)
 //Bellow is all of our routes 
 //We use express for this
 //Rendering the home page
 app.get('/',(req,res)=>{
     res.render('home')
 })
-//Using Joi for server side side validation when a customer leaves a review of a campground 
-const validatereview = (req,res,next) => {
-    const {error} = reviewschema.validate(req.body)
-    if(error){
-        const msg = error.details.map(el => el.message).join(',')
-        throw new expressError(msg,400)
-      }
-      //console.log(result)
-      else{
-        next()
-      }
-}
-
-app.post('/campgrounds/:id/reviews', validatereview,catchAsync(async (req, res) => {
-    //Searching in the campground model
-    const campground = await Campground.findById(req.params.id); // Corrected method name
-    const review = new Review(req.body.review); // Corrected property access
-    campground.reviews.push(review);
-    await campground.save();
-    await review.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-//Deleting a review
-app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-
-    // Remove the reviewId from the reviews array of the campground
-    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-
-    // Delete the review
-    await Review.findByIdAndDelete(reviewId);
-
-    res.redirect(`/campgrounds/${id}`);
-}));
-
 
 app.all("*",(req,res,next)=>{
     next(new expressError("Page not found",404))
 })
-
-
 //Error handling basics
 //When the catchAsync function has an error it will come here 
 //This is what is used to handle the error

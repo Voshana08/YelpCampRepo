@@ -3,6 +3,9 @@ const router = express.Router()
 //Async error handling function is being imported
 const catchAsync = require('../utils/catchAsync')
 const expressError = require('../utils/expressError')
+//Using Joi for server side validation 
+//We are requiring the campgroundSchema from the schmas.js file
+//This is not the same as the mongo schema, dont be confused 
 const {campgroundSchema} = require('../schmas.js')
 
 //Importing the campground model from the campround.js file
