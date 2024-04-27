@@ -11,6 +11,11 @@ const methodOverride = require('method-override')
 app.use(express.static(path.join(__dirname,'public')))
 //Requiring ejs-mate
 const ejsMate = require('ejs-mate')
+//Requiring express sessions
+const session = require('express-session')
+//Flash, this is sued for flashing messages
+const flash = require('connect-flash')
+
 //Async error handling function is being imported
 const catchAsync = require('./utils/catchAsync')
 const expressError = require('./utils/expressError')
@@ -52,7 +57,27 @@ app.engine('ejs',ejsMate)
 app.use(express.urlencoded({extended:true}))
 //method-overdide package
 app.use(methodOverride('_method'))
-
+//Sessions 
+//This is for storing user sessions 
+//We are configuring session data which should be saved
+const sessionconfig = {
+    secret : 'thisshouldbeasecret',
+    resave:false,
+    saveUninitialized :true,
+    cookie:{
+        expires : Date.now() + 1000 *60 * 60 *24 *7 ,
+        maxAge : 1000 *60 * 60 *24 *7
+    }
+     
+}
+app.use(session(sessionconfig))
+app.use(flash())
+//middleware for flash
+app.use((req,res,next)=>{
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    next()
+})
 
 app.use('/campgrounds',campgrounds)
 app.use('/campgrounds/:id/reviews',reviews)
