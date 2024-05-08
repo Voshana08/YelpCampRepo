@@ -94,6 +94,11 @@ passport.deserializeUser(User.deserializeUser())
 //This is not a full middleware for flash 
 //This gives us global variables. Such as currentUser.
 app.use((req,res,next)=>{
+    // In summary, this code ensures that if 
+    // a user tries to access a page other than the login page (/login) or the homepage (/),
+    // their original URL is stored in the session. 
+    // After the user successfully logs in, they will be redirected back to the page they originally requested. 
+    // This helps maintain the user's navigation context across the login process.
    if(!['/login','/'].includes(res.originalUrl)){
     req.session.returnTo = req.originalUrl
    }
