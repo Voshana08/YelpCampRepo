@@ -25,7 +25,11 @@ const CampgroundSchema = new Schema({
     reviews: [{
         type:Schema.Types.ObjectId,
         ref:'Review'
-    }]
+    }],
+    author:{
+        type:Schema.Types.ObjectId,
+        ref:'User'
+    }
 })
 //Definfing a middleware
 CampgroundSchema.post('findOneAndDelete', async function(doc){
