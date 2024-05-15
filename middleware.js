@@ -1,15 +1,16 @@
 const Campground = require('./models/campground');
+const Review = require('./models/review.js')
 const expressError = require('./utils/expressError')
 //Using Joi for server side validation 
 //We are requiring the campgroundSchema from the schmas.js file
 //This is not the same as the mongo schema, dont be confused 
-const {reviewschema} = require('../schmas.js')
+const {reviewschema} = require('./schmas.js')
 const {campgroundSchema} = require('./schmas.js')
 
 module.exports.isLoggedin = (req,res,next)=>{
     if(!req.isAuthenticated()){
     
-        req.flash('error','You must be signed in')
+        req.flash('error','You must be signed in first')
         //redirecting to the /login url.
         //When it goes to /login, it will render the login page from the as that 
         //is what is specified
@@ -56,4 +57,15 @@ module.exports.validatereview = (req,res,next) => {
     else{
       next()
     }
+}
+
+module.exports.isReviewAuthor = async(req,res,next) => {
+  const  {id, reviewId} =req.params
+  const review = await Campground.findById(reviewId)
+  if(!review.author.equals(req.user._id)){
+    req.flash(error,'You do not have permission')
+   return res.redirect(`/campgrounds/${id}`)
+    
+  }
+  next()
 }

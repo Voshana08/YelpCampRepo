@@ -54,8 +54,16 @@ router.post('/',validateCampground,isLoggedin,catchAsync(async(req,res,next) =>{
 
 //Displaying individual campgrounds on the /campground/show page
 router.get('/:id',catchAsync(async(req,res)=>{
-    const campground = await Campground.findById(req.params.id).populate('reviews').populate('author')
-   // console.log(campground)
+  const campground = await Campground.findById(req.params.id)
+  .populate({
+      path: 'reviews',
+      populate: { path: 'author' } // Ensure 'author' matches the field name in the review schema
+  })
+  .populate('author'); // Assuming the campground has an 'author' field
+
+
+  console.log(campground); // Output the reviews array to the console
+
    if(!campground){
     req.flash('error','Cannot find campground')
     return res.redirect('/campgrounds')

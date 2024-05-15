@@ -9,14 +9,15 @@ const expressError = require('../utils/expressError')
 const Campground = require('../models/campground');
 //Importing the review model
 const Review = require('../models/review.js')
-const {validatereview} = require('../middleware.js')
+const {validatereview,isLoggedin,isReviewAuthor} = require('../middleware.js')
 
 
 
-router.post('/', validatereview,catchAsync(async (req, res) => {
+router.post('/', validatereview,isLoggedin,catchAsync(async (req, res) => {
     //Searching in the campground model
     const campground = await Campground.findById(req.params.id); // Corrected method name
     const review = new Review(req.body.review); // Corrected property access
+    review.author = req.user._id
     campground.reviews.push(review);
     await campground.save();
     await review.save();
@@ -26,7 +27,7 @@ router.post('/', validatereview,catchAsync(async (req, res) => {
 
 
 //Deleting a review
-router.delete('/:reviewId', catchAsync(async (req, res) => {
+router.delete('/:reviewId',isLoggedin,isReviewAuthor,catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 
     // Remove the reviewId from the reviews array of the campground
