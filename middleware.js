@@ -1,5 +1,6 @@
 const Campground = require('./models/campground');
 const Review = require('./models/review.js')
+const User = require('./models/user.js')
 const expressError = require('./utils/expressError')
 //Using Joi for server side validation 
 //We are requiring the campgroundSchema from the schmas.js file
@@ -59,13 +60,39 @@ module.exports.validatereview = (req,res,next) => {
     }
 }
 
-module.exports.isReviewAuthor = async(req,res,next) => {
-  const  {id, reviewId} =req.params
-  const review = await Campground.findById(reviewId)
-  if(!review.author.equals(req.user._id)){
-    req.flash(error,'You do not have permission')
-   return res.redirect(`/campgrounds/${id}`)
+// module.exports.isReviewAuthor = async(req,res,next) => {
+//   const  {id, reviewId} =req.params
+//   const review = await Campground.findById(reviewId)
+//   if(!review.author.equals(req.user._id)){
+//     req.flash(error,'You do not have permission')
+//    return res.redirect(`/campgrounds/${id}`)
     
+//   }
+//   next()
+// }
+
+//GPT generated
+module.exports.isReviewAuthor = async (req, res, next) => {
+  const { id, reviewId } = req.params;
+  try {
+      // Attempt to find the review by its ID
+      const review = await Review.findById(reviewId);
+      // If the review is not found, return an error
+      if (!review) {
+          req.flash('error', 'Review not found');
+          return res.redirect(`/campgrounds/${id}`);
+      }
+      // Check if the logged-in user is the author of the review
+      if (!review.author.equals(req.user._id)) {
+          req.flash('error', 'You do not have permission');
+          return res.redirect(`/campgrounds/${id}`);
+      }
+      // If the user is the author, continue to the next middleware
+      next();
+  } catch (err) {
+      // Handle any errors that occur during the database query
+      console.error(err);
+      req.flash('error', 'An error occurred');
+      return res.redirect(`/campgrounds/${id}`);
   }
-  next()
-}
+};

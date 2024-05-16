@@ -3,7 +3,7 @@ const router = express.Router({mergeParams:true})
 //Async error handling function is being imported
 const catchAsync = require('../utils/catchAsync')
 const expressError = require('../utils/expressError')
-
+const reviews = require('../controllers/reviews.js')
 
 //Importing the campground model from the campround.js file
 const Campground = require('../models/campground');
@@ -13,31 +13,11 @@ const {validatereview,isLoggedin,isReviewAuthor} = require('../middleware.js')
 
 
 
-router.post('/', validatereview,isLoggedin,catchAsync(async (req, res) => {
-    //Searching in the campground model
-    const campground = await Campground.findById(req.params.id); // Corrected method name
-    const review = new Review(req.body.review); // Corrected property access
-    review.author = req.user._id
-    campground.reviews.push(review);
-    await campground.save();
-    await review.save();
-    req.flash('success','Created new review')
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
+router.post('/', validatereview,isLoggedin,catchAsync(reviews.createReview));
 
-
+ 
 //Deleting a review
-router.delete('/:reviewId',isLoggedin,isReviewAuthor,catchAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-
-    // Remove the reviewId from the reviews array of the campground
-    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-
-    // Delete the review
-    await Review.findByIdAndDelete(reviewId);
-    req.flash('success','Successfully deleted review')
-    res.redirect(`/campgrounds/${id}`);
-}));
+router.delete('/:reviewId',isLoggedin,isReviewAuthor,catchAsync(reviews.deleteReviews));
 
 module.exports = router;
 

@@ -16,6 +16,8 @@ const Review = require('../models/review.js')
 const {isLoggedin} = require('../middleware.js')
 const {validateCampground} = require('../middleware.js')
 const {isAuthor} = require('../middleware.js')
+//This is requiring the controller function
+const campgrounds =require('../controllers/campgrounds.js')
 //Making a new campground to test out the code 
 //  router.get("/makecampground", async (req, res) => {
 //     try {
@@ -29,87 +31,26 @@ const {isAuthor} = require('../middleware.js')
 //  });
 
 //Diplaying all of the campgrounds on the /campground/index page
-router.get('/',async (req,res) =>{
-    const campgrounds = await Campground.find({})
-    res.render('campgrounds/index',{campgrounds})
-})
+router.get('/',catchAsync(campgrounds.index))
 
 //Creating a form 
-router.get('/new',isLoggedin,(req,res)=>{
-    res.render('campgrounds/new')
-})
+router.get('/new',isLoggedin,campgrounds.renderNewForm)
 
 //We need a post request to send the form data through
 //If we need to submit a form we need to use a post route 
 //Using the catchAsync function to catch async errors
-router.post('/',validateCampground,isLoggedin,catchAsync(async(req,res,next) =>{
-    // if(!req.body.campground) throw new expressError("Invalid campground")
-   const campground = new Campground(req.body.campground)
-   campground.author = req.user._id
-    await campground.save()
-    req.flash('success','Successfully made a campground')
-    res.redirect(`/campgrounds/${campground._id}`)
-    
-}))
+router.post('/',validateCampground,isLoggedin,catchAsync(campgrounds.createCampground))
 
 //Displaying individual campgrounds on the /campground/show page
-router.get('/:id',catchAsync(async(req,res)=>{
-  const campground = await Campground.findById(req.params.id)
-  .populate({
-      path: 'reviews',
-      populate: { path: 'author' } // Ensure 'author' matches the field name in the review schema
-  })
-  .populate('author'); // Assuming the campground has an 'author' field
-
-
-  console.log(campground); // Output the reviews array to the console
-
-   if(!campground){
-    req.flash('error','Cannot find campground')
-    return res.redirect('/campgrounds')
-   }
-  res.render('campgrounds/show',{campground})
-}))
+router.get('/:id',catchAsync(campgrounds.showCampground))
 
 //Editing already inserted content 
 //We are going to be using a form for this 
-router.get('/:id/edit',isLoggedin,isAuthor, catchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
-    const {id} = req.params
-    // const campground = await Campground.findById(id)
-    if(!campground){
-      req.flash('error','Cannot find campground')
-      return res.redirect('/campgrounds')
-     }
-    
-    res.render('campgrounds/edit', { campground });
-}))
+router.get('/:id/edit',isLoggedin,isAuthor, catchAsync(campgrounds.renderEditForm))
 
-router.put('/:id',validateCampground,isLoggedin,isAuthor,catchAsync(async(req,res)=>{
-
-
-  //getting the information from the request 
-    const {id} = req.params
-    //Finding the value with that id and then updating it 
-    //We have used spread here 
-     const campground = await Campground.findByIdAndUpdate(id,{...req.body.campground})
-    req.flash('success',"Successfuly updated campground")
-    //Redirecting back to the show page
-    res.redirect(`/campgrounds/${campground._id}`)}))
+router.put('/:id',validateCampground,isLoggedin,isAuthor,catchAsync(campgrounds.updateCampground))
 
 //Deleting a Campground
-router.delete('/:id',isAuthor, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    
-    const campground = await Campground.findById(id)
-    if(! campground.author.equals(req.user._id)){
-      req.flash(error,'You do not have permission')
-     return res.redirect(`/campgrounds/${id}`)
-      
-    }
-    await Campground.findByIdAndDelete(id);
-    req.flash('success',"Successfuly deleted campground")
-    res.redirect('/campgrounds');
-}));
+router.delete('/:id',isAuthor, catchAsync(campgrounds.deleteCampground));
 
 module.exports= router;
