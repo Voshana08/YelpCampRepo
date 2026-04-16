@@ -1,6 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const flash = require('connect-flash')
+//Requiring multer. This is a middleware used for multy file uploads
+// Lecture 545
+const multer  = require('multer')
+const {storage} = require('../cloudinary')
+//Using cloudinary storage
+const upload = multer({ storage })
 //Async error handling function is being imported
 const catchAsync = require('../utils/catchAsync')
 //Using Joi for server side validation 
@@ -18,6 +24,8 @@ const {validateCampground} = require('../middleware.js')
 const {isAuthor} = require('../middleware.js')
 //This is requiring the controller function
 const campgrounds =require('../controllers/campgrounds.js')
+
+
 //Making a new campground to test out the code 
 //  router.get("/makecampground", async (req, res) => {
 //     try {
@@ -39,7 +47,7 @@ router.get('/new',isLoggedin,campgrounds.renderNewForm)
 //We need a post request to send the form data through
 //If we need to submit a form we need to use a post route 
 //Using the catchAsync function to catch async errors
-router.post('/',validateCampground,isLoggedin,catchAsync(campgrounds.createCampground))
+router.post('/', isLoggedin, upload.single('image'), validateCampground, catchAsync(campgrounds.createCampground));
 
 //Displaying individual campgrounds on the /campground/show page
 router.get('/:id',catchAsync(campgrounds.showCampground))
@@ -48,7 +56,7 @@ router.get('/:id',catchAsync(campgrounds.showCampground))
 //We are going to be using a form for this 
 router.get('/:id/edit',isLoggedin,isAuthor, catchAsync(campgrounds.renderEditForm))
 
-router.put('/:id',validateCampground,isLoggedin,isAuthor,catchAsync(campgrounds.updateCampground))
+router.put('/:id', isLoggedin, isAuthor, upload.single('image'), validateCampground, catchAsync(campgrounds.updateCampground))
 
 //Deleting a Campground
 router.delete('/:id',isAuthor, catchAsync(campgrounds.deleteCampground));

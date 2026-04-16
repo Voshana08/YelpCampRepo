@@ -1,15 +1,38 @@
 <% layout('layout/boilerplate') %>
-<h1>Login</h1>
-<form action="/login" method="post" class="validatedform" novalidate>
-    <div class="mb-3">
-        <label class="form-label" for="username">Username </label>
-        <input class="form-control" type="text" name="username" id="username" required>
-        <div class="valid-feedback">Looks Good!</div>
+
+<div class="auth-wrapper">
+    <div class="auth-card card">
+        <div class="card-header">
+            <span class="brand-icon"><i class="fa-solid fa-tent"></i></span>
+            <h2>Welcome Back</h2>
+            <p>Sign in to your YelpCamp account</p>
+        </div>
+        <div class="card-body">
+            <form action="/login" method="post" class="validatedform" novalidate>
+                <div class="mb-3">
+                    <label class="form-label" for="username">
+                        <i class="fa-solid fa-user me-1 text-muted"></i>Username
+                    </label>
+                    <input class="form-control form-control-lg" type="text" name="username" id="username"
+                        placeholder="Enter your username" required>
+                    <div class="invalid-feedback">Please enter your username.</div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label" for="password">
+                        <i class="fa-solid fa-lock me-1 text-muted"></i>Password
+                    </label>
+                    <input class="form-control form-control-lg" type="password" name="password" id="password"
+                        placeholder="Enter your password" required>
+                    <div class="invalid-feedback">Please enter your password.</div>
+                </div>
+                <button class="btn btn-yc-primary btn-lg w-100">
+                    <i class="fa-solid fa-right-to-bracket me-2"></i>Login
+                </button>
+            </form>
+        </div>
+        <div class="card-footer">
+            Don't have an account?
+            <a href="/register" style="color:var(--yc-green); font-weight:700;">Register here</a>
+        </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label" for="username">Password </label>
-        <input class="form-control" type="password" name="password" id="password" required>
-        <div class="valid-feedback">Looks Good!</div>
-    </div>
-    <button class="btn btn-success">Login</button>
-</form>
+</div>

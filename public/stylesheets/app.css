@@ -1,0 +1,335 @@
+:root {
+    --yc-green: #2d6a4f;
+    --yc-green-mid: #40916c;
+    --yc-green-light: #52b788;
+    --yc-green-pale: #d8f3dc;
+    --yc-orange: #e76f51;
+    --yc-dark: #1a1a2e;
+    --yc-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --yc-shadow-hover: 0 8px 28px rgba(0,0,0,0.16);
+    --yc-radius: 12px;
+    --yc-radius-lg: 16px;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #f0f4f0;
+}
+
+/* ===== NAVBAR ===== */
+.yc-navbar {
+    background: var(--yc-dark) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    padding: 0.6rem 0;
+}
+
+.yc-navbar .navbar-brand {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: white !important;
+    letter-spacing: -0.5px;
+}
+
+.yc-navbar .navbar-brand span {
+    color: var(--yc-green-light);
+}
+
+.yc-navbar .nav-link {
+    color: rgba(255,255,255,0.82) !important;
+    font-weight: 600;
+    transition: color 0.2s, background 0.2s;
+    padding: 0.4rem 0.85rem !important;
+    border-radius: 6px;
+}
+
+.yc-navbar .nav-link:hover {
+    color: white !important;
+    background: rgba(255,255,255,0.1);
+}
+
+.btn-nav-auth {
+    background: var(--yc-green) !important;
+    color: white !important;
+    border-radius: 20px !important;
+    padding: 0.3rem 1.1rem !important;
+    font-weight: 700 !important;
+}
+
+.btn-nav-auth:hover {
+    background: var(--yc-green-mid) !important;
+}
+
+/* ===== PAGE HEADER ===== */
+.page-header {
+    background: linear-gradient(135deg, var(--yc-green) 0%, var(--yc-green-mid) 100%);
+    color: white;
+    border-radius: var(--yc-radius);
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.75rem;
+}
+
+.page-header h1 {
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+}
+
+.page-header p {
+    opacity: 0.85;
+    margin-bottom: 0;
+}
+
+/* ===== CAMPGROUND CARDS ===== */
+.campground-card {
+    border: none;
+    border-radius: var(--yc-radius);
+    box-shadow: var(--yc-shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+    background: white;
+}
+
+.campground-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--yc-shadow-hover);
+}
+
+.campground-img {
+    height: 210px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.campground-card .card-footer {
+    background: white;
+    border-top: 1px solid #f0f0f0;
+}
+
+.badge-price {
+    background-color: var(--yc-green);
+    color: white;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+}
+
+/* ===== BUTTONS ===== */
+.btn-yc-primary {
+    background-color: var(--yc-green);
+    border-color: var(--yc-green);
+    color: white;
+    font-weight: 700;
+    border-radius: 8px;
+}
+
+.btn-yc-primary:hover, .btn-yc-primary:focus {
+    background-color: var(--yc-green-mid);
+    border-color: var(--yc-green-mid);
+    color: white;
+}
+
+.btn-outline-success {
+    color: var(--yc-green) !important;
+    border-color: var(--yc-green) !important;
+    font-weight: 600;
+}
+
+.btn-outline-success:hover {
+    background-color: var(--yc-green) !important;
+    color: white !important;
+}
+
+/* ===== SHOW PAGE ===== */
+.show-img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    border-radius: var(--yc-radius);
+    box-shadow: var(--yc-shadow);
+}
+
+.show-card {
+    border: none;
+    border-radius: var(--yc-radius);
+    box-shadow: var(--yc-shadow);
+    overflow: hidden;
+}
+
+.show-card .card-header {
+    background: var(--yc-green);
+    color: white;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border: none;
+}
+
+.show-card .card-footer {
+    background: #fafafa;
+    border-top: 1px solid #eee;
+}
+
+/* ===== REVIEW CARDS ===== */
+.review-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: var(--yc-shadow);
+    overflow: hidden;
+}
+
+.review-card .card-header {
+    background: var(--yc-green-pale);
+    border-bottom: 1px solid #c7e8d4;
+    font-weight: 700;
+    color: var(--yc-green);
+    padding: 0.65rem 1rem;
+}
+
+/* ===== FORMS ===== */
+.form-card {
+    max-width: 630px;
+    margin: 0 auto;
+    border: none;
+    border-radius: var(--yc-radius-lg);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    overflow: hidden;
+    background: white;
+}
+
+.form-card .card-header {
+    background: linear-gradient(135deg, var(--yc-green) 0%, var(--yc-green-mid) 100%);
+    color: white;
+    padding: 1.4rem 1.75rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    border: none;
+}
+
+.form-card .card-body {
+    padding: 2rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--yc-green-light);
+    box-shadow: 0 0 0 0.2rem rgba(82, 183, 136, 0.25);
+}
+
+.form-label {
+    font-weight: 700;
+    color: #444;
+    margin-bottom: 0.35rem;
+}
+
+/* ===== FILE UPLOAD ===== */
+.file-upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: all 0.2s;
+    background: #fafafa;
+}
+
+.file-upload-area:hover {
+    border-color: var(--yc-green-light);
+    background: var(--yc-green-pale);
+}
+
+/* ===== AUTH PAGES ===== */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0 2.5rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+    border: none;
+    border-radius: var(--yc-radius-lg);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    overflow: hidden;
+    background: white;
+}
+
+.auth-card .card-header {
+    background: linear-gradient(135deg, var(--yc-green) 0%, var(--yc-green-mid) 100%);
+    color: white;
+    padding: 2rem 1.75rem 1.5rem;
+    text-align: center;
+    border: none;
+}
+
+.auth-card .card-header .brand-icon {
+    font-size: 2.6rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.auth-card .card-header h2 {
+    font-weight: 800;
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+.auth-card .card-header p {
+    opacity: 0.85;
+    margin: 0.3rem 0 0;
+    font-size: 0.9rem;
+}
+
+.auth-card .card-body {
+    padding: 2rem;
+}
+
+.auth-card .card-footer {
+    background: #f8f9fa;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    border-top: 1px solid #eee;
+}
+
+/* ===== ALERTS ===== */
+.alert {
+    border-radius: var(--yc-radius);
+    border: none;
+    font-weight: 600;
+}
+
+/* ===== FOOTER ===== */
+.yc-footer {
+    background: var(--yc-dark) !important;
+    padding: 1.4rem 0;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.88rem;
+    margin-top: auto;
+}
+
+.yc-footer a {
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.yc-footer a:hover {
+    color: var(--yc-green-light);
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb {
+    background: none;
+    padding: 0;
+    margin-bottom: 0.75rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: #aaa;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 576px) {
+    .campground-img  { height: 180px; }
+    .show-img        { height: 240px; }
+    .page-header     { padding: 1.25rem 1.25rem; }
+    .form-card .card-body { padding: 1.25rem; }
+    .auth-card .card-body { padding: 1.25rem; }
+}

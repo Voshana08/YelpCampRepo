@@ -22,10 +22,10 @@ short.register = async (req, res,next) => {
     }
     catch (e) {
         req.flash('error', e.message)
-        res.redirect('/campgrounds')
+        res.redirect('/register')
     }
 }
-//Rednering login form
+//Rendering login form
 short.renderLogin = (req, res) => {
     res.render('users/login')
 }
@@ -33,7 +33,7 @@ short.renderLogin = (req, res) => {
 short.login = (req, res) => {
     req.flash('success', 'Welcome Back')
     const redirectUrl = req.session.returnTo || '/campgrounds'
-    delete req.session.returunTo
+    delete req.session.returnTo
     res.redirect(redirectUrl)
 }
 //logout

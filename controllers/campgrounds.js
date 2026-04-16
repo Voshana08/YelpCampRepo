@@ -12,6 +12,8 @@ module.exports.renderNewForm = (req,res)=>{
 module.exports.createCampground = async(req,res,next) =>{
     // if(!req.body.campground) throw new expressError("Invalid campground")
    const campground = new Campground(req.body.campground)
+   campground.image = req.file.path
+   campground.imageFilename = req.file.filename
    campground.author = req.user._id
     await campground.save()
     req.flash('success','Successfully made a campground')
@@ -50,26 +52,20 @@ short.showCampground = async(req,res)=>{
 }
 
 short.updateCampground = async(req,res)=>{
-
-
-    //getting the information from the request 
-      const {id} = req.params
-      //Finding the value with that id and then updating it 
-      //We have used spread here 
-       const campground = await Campground.findByIdAndUpdate(id,{...req.body.campground})
-      req.flash('success',"Successfuly updated campground")
-      //Redirecting back to the show page
-      res.redirect(`/campgrounds/${campground._id}`)}
+    const {id} = req.params
+    const updates = {...req.body.campground}
+    if(req.file) {
+        updates.image = req.file.path
+        updates.imageFilename = req.file.filename
+    }
+    const campground = await Campground.findByIdAndUpdate(id, updates)
+    req.flash('success',"Successfully updated campground")
+    res.redirect(`/campgrounds/${campground._id}`)
+}
 
 short.deleteCampground = async (req, res) => {
     const { id } = req.params;
     
-    const campground = await Campground.findById(id)
-    if(! campground.author.equals(req.user._id)){
-      req.flash(error,'You do not have permission')
-     return res.redirect(`/campgrounds/${id}`)
-      
-    }
     await Campground.findByIdAndDelete(id);
     req.flash('success',"Successfuly deleted campground")
     res.redirect('/campgrounds');

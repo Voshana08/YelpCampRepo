@@ -11,6 +11,9 @@ const CampgroundSchema = new Schema({
     image:{
         type:String
     },
+    imageFilename:{
+        type:String
+    },
     price:{
         type:Number,
     min:0

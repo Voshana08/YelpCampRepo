@@ -1,20 +1,46 @@
 <% layout('layout/boilerplate') %>
-<h1>Register</h1>
-<form action="/register" method="post" class="validatedform" novalidate>
-    <div class="mb-3">
-        <label class="form-label" for="username">Username </label>
-        <input class="form-control" type="text" name="username" id="username" required>
-        <div class="valid-feedback">Looks Good!</div>
+
+<div class="auth-wrapper">
+    <div class="auth-card card">
+        <div class="card-header">
+            <span class="brand-icon"><i class="fa-solid fa-tent"></i></span>
+            <h2>Join YelpCamp</h2>
+            <p>Create your free account today</p>
+        </div>
+        <div class="card-body">
+            <form action="/register" method="post" class="validatedform" novalidate>
+                <div class="mb-3">
+                    <label class="form-label" for="username">
+                        <i class="fa-solid fa-user me-1 text-muted"></i>Username
+                    </label>
+                    <input class="form-control form-control-lg" type="text" name="username" id="username"
+                        placeholder="Choose a username" required>
+                    <div class="invalid-feedback">Please choose a username.</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="email">
+                        <i class="fa-solid fa-envelope me-1 text-muted"></i>Email Address
+                    </label>
+                    <input class="form-control form-control-lg" type="email" name="email" id="email"
+                        placeholder="your@email.com" required>
+                    <div class="invalid-feedback">Please enter a valid email.</div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label" for="password">
+                        <i class="fa-solid fa-lock me-1 text-muted"></i>Password
+                    </label>
+                    <input class="form-control form-control-lg" type="password" name="password" id="password"
+                        placeholder="Create a password" required>
+                    <div class="invalid-feedback">Please create a password.</div>
+                </div>
+                <button class="btn btn-yc-primary btn-lg w-100">
+                    <i class="fa-solid fa-user-plus me-2"></i>Create Account
+                </button>
+            </form>
+        </div>
+        <div class="card-footer">
+            Already have an account?
+            <a href="/login" style="color:var(--yc-green); font-weight:700;">Login here</a>
+        </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label" for="username">Email </label>
-        <input class="form-control" type="email" name="email" id="email" required>
-        <div class="valid-feedback">Looks Good!</div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label" for="username">Password </label>
-        <input class="form-control" type="password" name="password" id="password" required>
-        <div class="valid-feedback">Looks Good!</div>
-    </div>
-    <button class="btn btn-success">Register</button>
-</form>
+</div>

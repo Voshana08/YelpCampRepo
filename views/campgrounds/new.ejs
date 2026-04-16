@@ -1,46 +1,68 @@
 <% layout('/layout/boilerplate') %>
 
-    <div class="row">
-        <h1 class="text-center"> New Campground </h1>
-        <div class="col-6 offset-3">
-            <form action="/campgrounds" method="POST" novalidate class="validatedform">
-                <div class="mb-3">
-                    <label class="form-label" for="title">Title </label>
-                    <input class="form-control" type="text" name="campground[title]" id="title" required>
-                    <div class="valid-feedback">Looks Good!</div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="location">Location</label>
-                    <input class="form-control" type="text" name="campground[location]" id="location" required>
-                    <div class="valid-feedback">Looks Good!</div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="image">Image</label>
-                    <input class="form-control" type="text" name="campground[image]" id="image" required>
-                    <div class="valid-feedback">Looks Good!</div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="price">Price</label>
-                    <div class="input-group">
-                        <span class="input-group-text" id="price-label">$</span>
-                        <input type="text" class="form-control" placeholder="0.0" aria-label="price"
-                            aria-describedby="price-label" name="campground[price]" id="price" required>
-                            <div class="valid-feedback">Looks Good!</div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" type="text-area" name="campground[description]"
-                        id="description" required></textarea>
-                        <div class="valid-feedback">Looks Good!</div>
-                </div>
-                <button class="btn btn-success">Add campground</button>
-            </form>
-            <!-- We dont need to write /campground/index as the index file is what is servered when 
-        we call the campground directory -->
-            <a href="/campgrounds">View All Campgrounds</a>
-        </div>
-
+<div class="form-card card my-4">
+    <div class="card-header">
+        <i class="fa-solid fa-tent me-2"></i>Add a New Campground
     </div>
-
-   
+    <div class="card-body">
+        <form action="/campgrounds" method="POST" novalidate class="validatedform" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="title">
+                    <i class="fa-solid fa-heading me-1 text-muted"></i>Title
+                </label>
+                <input class="form-control" type="text" name="campground[title]" id="title"
+                    placeholder="e.g. Sunrise Ridge Camp" required>
+                <div class="valid-feedback">Looks Good!</div>
+                <div class="invalid-feedback">Please enter a title.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">
+                    <i class="fa-solid fa-location-dot me-1 text-muted"></i>Location
+                </label>
+                <input class="form-control" type="text" name="campground[location]" id="location"
+                    placeholder="e.g. Yosemite Valley, CA" required>
+                <div class="valid-feedback">Looks Good!</div>
+                <div class="invalid-feedback">Please enter a location.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="img">
+                    <i class="fa-solid fa-image me-1 text-muted"></i>Campground Photo
+                </label>
+                <div class="file-upload-area">
+                    <input type="file" name="image" id="img" accept="image/*" class="form-control border-0 bg-transparent p-0" required>
+                    <p class="text-muted small mt-2 mb-0"><i class="fa-solid fa-cloud-arrow-up me-1"></i>JPG or PNG accepted</p>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="price">
+                    <i class="fa-solid fa-dollar-sign me-1 text-muted"></i>Price per Night
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" class="form-control" placeholder="0.00" min="0" step="0.01"
+                        name="campground[price]" id="price" required>
+                    <span class="input-group-text">/night</span>
+                    <div class="valid-feedback">Looks Good!</div>
+                    <div class="invalid-feedback">Please enter a price.</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label" for="description">
+                    <i class="fa-solid fa-align-left me-1 text-muted"></i>Description
+                </label>
+                <textarea class="form-control" name="campground[description]" id="description"
+                    rows="4" placeholder="Describe what makes this campground special..." required></textarea>
+                <div class="valid-feedback">Looks Good!</div>
+                <div class="invalid-feedback">Please add a description.</div>
+            </div>
+            <div class="d-grid gap-2">
+                <button class="btn btn-yc-primary btn-lg">
+                    <i class="fa-solid fa-plus me-2"></i>Add Campground
+                </button>
+                <a href="/campgrounds" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrow-left me-1"></i>Back to Campgrounds
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

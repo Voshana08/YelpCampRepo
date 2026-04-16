@@ -42,7 +42,7 @@ const seedDB = async() =>{
             author: '662ed86cd74f35976ee0f5a5',
             location:`${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
-           image: 'https://source.unsplash.com/collection/483251',
+           image: `https://picsum.photos/seed/yelpcamp${i}/800/500`,
            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus vel veritatis, repellendus dicta cumque praesentium quam harum alias porro sit voluptas officia hic quae possimus rerum culpa omnis excepturi expedita!",
            price:campprice,
            

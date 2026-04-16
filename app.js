@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV  !== "production"){
+    require('dotenv').config()
+}
+// console.log(process.env.CLOUDINARY_KEY)
 const express = require ('express')
 const app = express()
 //This is needed to render pages from any directory path
@@ -45,17 +49,12 @@ db.once('open',() =>{
     console.log("Database connected")
 })
 
-const { url } = require('inspector');
-const { AsyncLocalStorage } = require('async_hooks')
-const { error } = require('console')
-const req = require('express/lib/request.js')
-
-////These two lines of code are needed in order to run the ejs 
-//We need to specify the engine 
+////These two lines of code are needed in order to run the ejs
+//We need to specify the engine
 //We can just copy paste these two lines of code to any project
 app.set('view engine', 'ejs')
 //From any directory we can render because of this line of code
-app.set('/views',path.join(__dirname,'views'))
+app.set('views',path.join(__dirname,'views'))
 //This is another package 
 app.engine('ejs',ejsMate)
 //Parsing the body
@@ -99,7 +98,7 @@ app.use((req,res,next)=>{
     // their original URL is stored in the session. 
     // After the user successfully logs in, they will be redirected back to the page they originally requested. 
     // This helps maintain the user's navigation context across the login process.
-   if(!['/login','/'].includes(res.originalUrl)){
+   if(!['/login','/'].includes(req.originalUrl)){
     req.session.returnTo = req.originalUrl
    }
     res.locals.currentUser = req.user
@@ -124,7 +123,7 @@ app.use('/campgrounds/:id/reviews',reviewsRoutes)
 //We use express for this
 //Rendering the home page
 app.get('/',(req,res)=>{
-    res.render('home')
+    res.redirect('/campgrounds')
 })
 
 app.all("*",(req,res,next)=>{
